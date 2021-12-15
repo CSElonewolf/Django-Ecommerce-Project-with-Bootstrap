@@ -28,7 +28,7 @@
 	<div class="container">
 <div class="row align-items-center">
 	<div class="col-lg-2 col-md-3 col-6">
-		<a href="./" class="brand-wrap">
+		<a href="{% url 'home' %}" class="brand-wrap">
 			<img class="logo" src="{% static './images/logo.png' %}">
 		</a> <!-- brand-wrap.// -->
 	</div>
@@ -38,12 +38,13 @@
 				<i class="fa fa-bars"></i> All category
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
-				<a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
-				<a class="dropdown-item" href="#">Auto / Transportation</a>
-				<a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
-				<a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
-				<a class="dropdown-item" href="#">Beauty & Personal Care / Health </a>
+				{% for category in links %}
+				{% comment %} 1st way of grabbing links  {% endcomment %}
+					{% comment %} <a class="dropdown-item" href="{% url 'products_by_category' category.slug %}">{{category.category_name}} </a> {% endcomment %}
+
+				{% comment %} 2nd way of grabbing links  {% endcomment %}
+				 <a class="dropdown-item" href="{{ category.get_url }}">{{category.category_name}} </a>
+				{% endfor %}
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->
