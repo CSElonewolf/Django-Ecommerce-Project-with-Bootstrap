@@ -8,6 +8,7 @@ class Category(models.Model):
 	description = models.CharField(max_length=300,blank=True)
 	cat_image = models.ImageField(upload_to='photos/categories',blank=True)
 
+# change the table name in the database
 	class Meta:
 		verbose_name = 'category'
 		verbose_name_plural = 'categories'

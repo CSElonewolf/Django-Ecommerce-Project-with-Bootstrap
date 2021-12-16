@@ -34,6 +34,9 @@
 	<div class="col-md-3">
 		<div class="card card-product-grid">
 			<a href="{{product.get_url}}" class="img-wrap"> <img src="{{product.images.url}}" > </a>
+
+			{% comment %} 2nd way  {% endcomment %}
+				{% comment %} <a href="{% url 'product_detail' product.category.slug product.slug %}" class="img-wrap"> <img src="{{product.images.url}}" > </a> {% endcomment %}
 			<figcaption class="info-wrap">
 				<a href="{{product.get_url}}" class="title">{{product.product_name}}</a>
 				<div class="price mt-1">${{product.price}}</div> <!-- price-wrap.// -->

@@ -129,7 +129,6 @@ STATICFILES_DIRS = [
     'greatcart/static'
 ]
 
-
 # configure the media file storage location
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
