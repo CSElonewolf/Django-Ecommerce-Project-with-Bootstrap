@@ -109,6 +109,7 @@ def login(request):
 			auth.login(request,user)
 			messages.add_message(request,messages.SUCCESS,'You are now logged in.')
 
+
 			# redirects to checkout page after login if the any user wish to buy items in cart when not logged in
 			url = request.META.get('HTTP_REFERER')
 			try:
