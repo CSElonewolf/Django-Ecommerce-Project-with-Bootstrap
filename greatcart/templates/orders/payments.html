@@ -32,7 +32,7 @@
 <div class="card">
   <h5 class="card-header">Payment Method </h5>
   <div class="card-body">
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <p class="card-text">PayPal</p>
   </div>
 </div>
 <div class="card">
@@ -147,7 +147,7 @@
 		var url = "{% url 'payments' %}"
 		var OrderId = "{{order.order_number}}"
 		var payment_method = "Paypal"
-
+		var redirect_url = "{% url 'order_complete' %}"
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
 			style: {
@@ -192,7 +192,9 @@
 						}),
 					}) //fetch ends
 					.then(response => response.json())
-					.then(data => console.log(data));
+					.then(data => {
+						window.location.href = redirect_url + '?order_number='+ data.order_number + '&payment_id='+ data.transID;
+					});
 					}//sendData ends
                 });
             } //onApprove ends
