@@ -1,8 +1,14 @@
-from django.shortcuts import render,get_object_or_404
-from .models import Product
-from category.models import Category
+from django.shortcuts import render,get_object_or_404,redirect
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 from django.db.models import Q
+from django.contrib import messages
+
+# import for the app itself
+from .models import Product
+from category.models import Category
+from .models import ReviewRating
+from .forms import ReviewForm
+
 
 # model imports from another app
 from carts.models import CartItem
@@ -68,3 +74,29 @@ def product_detail(request,category_slug,product_slug):
 	}
 
 	return render(request,'store/product_detail.html',context)
+
+def submit_review(request,product_id):
+	url = request.META.get('HTTP_REFERER')
+	print(url)
+	if request.method == "POST":
+		# updates the old review fromo the user 
+		try:
+			reviews = ReviewRating.objects.get(user__id = request.user.id, product__id = product_id)
+			form = ReviewForm(request.POST,instance = reviews)
+			form.save()
+			messages.add_message(request,messages.SUCCESS,'Thank You! your review have been updated.')
+			return redirect(url)
+		# helps in adding a new review
+		except ReviewRating.DoesNotExist:
+			form = ReviewForm(request.POST)
+			if form.is_valid():
+				data = ReviewRating()
+				data.subject = form.cleaned_data['subject']
+				data.rating = form.cleaned_data['rating']
+				data.review = form.cleaned_data['review']
+				data.ip = request.META.get('REMOTE_ADDR')
+				data.product_id = product_id
+				data.user_id = request.user.id
+				data.save()
+				messages.add_message(request,messages.SUCCESS,'Thank you! Your review has been submitted.')
+				return redirect(url)

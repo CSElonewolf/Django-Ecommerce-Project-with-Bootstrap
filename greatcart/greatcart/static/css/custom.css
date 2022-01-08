@@ -1,0 +1,37 @@
+.rate > input{
+	display:none;
+}
+
+.rate{
+	display: inline-block;
+	border: 0;
+
+}
+
+.rate > label {
+	float: right;
+}
+/* showing the stars   */
+.rate > label:before{
+	display: inline-block;
+	font-size: 1.1.rem;
+	font-family: FontAwesome;
+	content: "\f005";
+	margin:0;
+	padding:0.3rem 0.2rem;
+	cursor:pointer;
+}
+/* half stars  */
+.rate .half:before {
+	content: "\f089";
+	position:absolute;
+	padding-right: 0;
+}
+/* click and hover */
+input:checked ~ label, label:hover ~ label{
+	color: #ffb503;
+}
+/* hover highlight */
+input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover  ~ label, label:hover ~ input:checked ~label {
+	color : #cc9000;
+}
