@@ -8,7 +8,7 @@ from .models import Product
 from category.models import Category
 from .models import ReviewRating
 from .forms import ReviewForm
-
+from orders.models import OrderProduct
 
 # model imports from another app
 from carts.models import CartItem
@@ -68,9 +68,23 @@ def product_detail(request,category_slug,product_slug):
 	except Exception as e:
 		raise e
 
+	# check if the logged in user is authorized to submit a review or not
+	if request.user.is_authenticated:
+		try:
+			orderproduct = OrderProduct.objects.filter(user = request.user, product_id = single_product.id).exists()
+		except:
+			orderproduct = None
+	else:
+		orderproduct = None
+
+	# get review for the product
+	reviews = ReviewRating.objects.filter(product_id = single_product.id, status = True)
+
 	context = {
 		'single_product': single_product,
-		'in_cart': in_cart
+		'in_cart': in_cart,
+		'orderproduct':orderproduct,
+		'reviews': reviews
 	}
 
 	return render(request,'store/product_detail.html',context)
@@ -79,7 +93,7 @@ def submit_review(request,product_id):
 	url = request.META.get('HTTP_REFERER')
 	print(url)
 	if request.method == "POST":
-		# updates the old review fromo the user 
+		# updates the old review fromo the user
 		try:
 			reviews = ReviewRating.objects.get(user__id = request.user.id, product__id = product_id)
 			form = ReviewForm(request.POST,instance = reviews)
