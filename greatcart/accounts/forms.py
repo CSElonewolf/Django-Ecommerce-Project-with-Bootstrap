@@ -1,6 +1,7 @@
 from django import forms
-from .models import Account
 from django.core.exceptions import ValidationError
+
+from .models import Account, UserProfile
 
 class RegistrationForm(forms.ModelForm):
 	# add 2 extra fields with class and placeholder
@@ -38,3 +39,32 @@ class RegistrationForm(forms.ModelForm):
 
 		if password != confirm_password:
 			raise ValidationError("Passoword doesn't match")
+
+# forms for the Edit Profile section insid dashboard
+class UserForm(forms.ModelForm):
+	class Meta:
+		model = Account
+		fields = ('first_name','last_name','phone_number')
+
+	def __init__(self,*args,**kwargs):
+		super(UserForm,self).__init__(*args,**kwargs)
+
+		# loop through all the fields and add class
+		for field in self.fields:
+			self.fields[field].widget.attrs['class'] = 'form-control'
+
+class UserProfileForm(forms.ModelForm):
+	# to remove -"Profile Picture Currently: userprofile/drf-cbv.jpg" message on the image tag we use this
+	profile_picture = forms.ImageField(required=False,error_messages={'invalid':{"'Image files only"}}, widget = forms.FileInput)
+
+
+	class Meta:
+		model = UserProfile
+		fields=('address_line_1','address_line_2','city','state','country','profile_picture')
+
+	def __init__(self,*args,**kwargs):
+		super(UserProfileForm,self).__init__(*args,**kwargs)
+
+		# loop through all the fields and add class
+		for field in self.fields:
+			self.fields[field].widget.attrs['class'] = 'form-control'
