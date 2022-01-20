@@ -24,41 +24,45 @@ from .forms import UserForm,UserProfileForm
 
 # Create your views here.
 def register(request):
-	if request.method == 'POST':
-		form = RegistrationForm(request.POST)
-		if form.is_valid():
-			# collecing vital information for registration
-			first_name = form.cleaned_data['first_name']
-			last_name = form.cleaned_data['last_name']
-			email = form.cleaned_data['email']
-			phone_number = form.cleaned_data['phone_number']
-			username = email.split('@')[0]
-			password = form.cleaned_data['password']
-			user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,password=password,username=username)
-			user.phone_number = phone_number
-			user.save()
+	if not request.user.is_authenticated:
+		if request.method == 'POST':
+			form = RegistrationForm(request.POST)
+			if form.is_valid():
+				# collecing vital information for registration
+				first_name = form.cleaned_data['first_name']
+				last_name = form.cleaned_data['last_name']
+				email = form.cleaned_data['email']
+				phone_number = form.cleaned_data['phone_number']
+				username = email.split('@')[0]
+				password = form.cleaned_data['password']
+				user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,password=password,username=username)
+				user.phone_number = phone_number
+				user.save()
 
-			# USER ACTIVATION email sending
-			current_site = get_current_site(request)
-			mail_subject = 'Please activate your account'
-			message = render_to_string('accounts/account_verification_email.html',{
-				'user':user,
-				'domain':current_site,
-				'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-				'token':default_token_generator.make_token(user)
-			})
-			to_email = email
-			send_email = EmailMessage(mail_subject,message,to=[to_email])
-			send_email.send()
+				# USER ACTIVATION email sending
+				current_site = get_current_site(request)
+				mail_subject = 'Please activate your account'
+				message = render_to_string('accounts/account_verification_email.html',{
+					'user':user,
+					'domain':current_site,
+					'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+					'token':default_token_generator.make_token(user)
+				})
+				to_email = email
+				send_email = EmailMessage(mail_subject,message,to=[to_email])
+				send_email.send()
 
-			# redirects to the info page
-			return redirect(f'/accounts/login/?command=verification&email={email}')
+				# redirects to the info page
+				return redirect(f'/accounts/login/?command=verification&email={email}')
+		else:
+			form = RegistrationForm()
+		context = {
+			'form':form
+		}
+		return render(request, 'accounts/register.html',context)
 	else:
-		form = RegistrationForm()
-	context = {
-		'form':form
-	}
-	return render(request, 'accounts/register.html',context)
+		return redirect('dashboard')
+
 
 
 def login(request):
@@ -149,6 +153,9 @@ def activate(request,uidb64,token):
 	if user is not None and default_token_generator.check_token(user,token):
 		user.is_active = True
 		user.save()
+		userprofile = UserProfile()
+		userprofile.user = user
+		userprofile.save()
 		messages.add_message(request,messages.SUCCESS,'Congratulation! Your account is activated')
 		return redirect('login')
 	else:
