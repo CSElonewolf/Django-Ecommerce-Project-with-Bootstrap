@@ -174,15 +174,16 @@
                     console.log('Capture result', orderData);
 
 					//calling sendData method
-					sendData()
+					sendData();
 
 					//define sendData function
 					function sendData(){
+						console.log(url)
 					fetch(url,{
-						method: 'POST',
+						method: "POST",
 						headers: {
-							'Content-Type': 'application/json',
-							'X-CSRFToken':csrftoken,
+							"Content-type": "application/json",
+							"X-CSRFToken":csrftoken,
 						},
 						body: JSON.stringify({
 							orderId: OrderId,

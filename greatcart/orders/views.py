@@ -5,6 +5,7 @@ import datetime
 import json
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 # imports from the project
 from .forms import OrderForm
@@ -16,6 +17,7 @@ from store.models import Product
 def payments(request):
 # grab the payments details sent from payments.html
 	body = json.loads(request.body)
+	print(body)
 	order = Order.objects.get(user = request.user,is_ordered = False,order_number = body['orderId'])
 
 	payment = Payment(
@@ -83,6 +85,7 @@ def payments(request):
 	return JsonResponse(data)
 
 # Create your views here.
+@login_required(login_url='login')
 def place_order(request,total=0,quantity = 0,):
 	current_user = request.user
 
@@ -112,6 +115,13 @@ def place_order(request,total=0,quantity = 0,):
 			data.last_name = form.cleaned_data['last_name']
 			data.phone = form.cleaned_data['phone']
 			data.email = form.cleaned_data['email']
+
+			# if we wish to get the data directly from the Account table 
+			# data.first_name = current_user.first_name
+			# data.last_name = current_user.last_name
+			# data.phone = current_user.phone_number
+			# data.email = current_user.email
+
 			data.address_line_1 = form.cleaned_data['address_line_1']
 			data.address_line_2 = form.cleaned_data['address_line_2']
 			data.country = form.cleaned_data['country']

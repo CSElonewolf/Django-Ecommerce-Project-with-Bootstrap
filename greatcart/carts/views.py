@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from store.models import Product
 from .models import Cart,CartItem
 from store.models import Variation
+from accounts.forms import UserForm
 
 # obtains the cart id = session_key
 def _cart_id(request):
@@ -21,7 +22,7 @@ def add_cart(request,product_id):
 	# get the product using the product_id
 	product = Product.objects.get(id = product_id)
 
-	# whenthe user is logged in 
+	# whenthe user is logged in
 	if current_user.is_authenticated:
 		product_variation = []
 		# recieve the variation details of the product from the POST Request.
@@ -233,6 +234,9 @@ def checkout(request,total=0,quantity = 0,cart_items = None):
 		# how to query CArtItem model depends whether the user is login or not
 		if request.user.is_authenticated:
 			cart_items = CartItem.objects.filter(user = request.user,is_active = True)
+
+			# if we wish to pre populate the data from the Accounts table
+			# user_form = UserForm(instance = request.user)
 		else:
 			cart = Cart.objects.get(cart_id = _cart_id(request))
 			cart_items = CartItem.objects.filter(cart = cart,is_active = True)
@@ -248,6 +252,7 @@ def checkout(request,total=0,quantity = 0,cart_items = None):
 		pass
 
 	context = {
+		# 'user_form':user_form,
 		'total':total,
 		'quantity':quantity,
 		'cart_items':cart_items,
