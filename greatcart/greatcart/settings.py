@@ -22,12 +22,12 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'django-insecure-@ydw(ku^n7&8tddvf5fmpl__yz^zqavvyiw3aw4-o0mkgd+*ne'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['greatcart.herokuapp.com']
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,11 +153,11 @@ MESSAGE_TAGS = {
 
 
 # SMTP Configuration
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('SEND_EMAIL')
-EMAIL_HOST_PASSWORD = os.environ.get('SEND_PASS')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast = bool)
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER = 'aabc62840@gmail.com'
+EMAIL_HOST_PASSWORD = 'Qqwerty67@aabc'
 
 
 SESSION_EXPIRE_SECONDS = 3600  # 1 hour
