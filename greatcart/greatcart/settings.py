@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -155,9 +155,9 @@ MESSAGE_TAGS = {
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = os.environ.get('SEND_EMAIL')
-EMAIL_HOST_PASSWORD = os.environ.get('SEND_PASS')
+# EMAIL_HOST_PASSWORD = os.environ.get('SEND_PASS')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast = bool)
-
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 
 SESSION_EXPIRE_SECONDS = 3600  # 1 hour
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True

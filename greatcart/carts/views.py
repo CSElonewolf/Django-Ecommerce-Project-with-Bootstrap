@@ -2,11 +2,13 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+
 # import from the project
 from store.models import Product
 from .models import Cart,CartItem
 from store.models import Variation
 from accounts.forms import UserForm
+
 
 # obtains the cart id = session_key
 def _cart_id(request):
@@ -22,7 +24,7 @@ def add_cart(request,product_id):
 	# get the product using the product_id
 	product = Product.objects.get(id = product_id)
 
-	# whenthe user is logged in
+	# when the user is logged in
 	if current_user.is_authenticated:
 		product_variation = []
 		# recieve the variation details of the product from the POST Request.
@@ -43,7 +45,7 @@ def add_cart(request,product_id):
 			cart_item = CartItem.objects.filter(product = product,user = current_user)
 			# so, what are we doing here ?
 
-			#we are trying to match the existing_variations from database with the curret_variations
+			#we are trying to match the existing_variations from database with the current_variations
 
 			#IN case, it matches we will increament the product quantity or else create a new cart item
 			ex_var_list = []
@@ -97,6 +99,7 @@ def add_cart(request,product_id):
 			for item in request.POST:
 				key = item
 				value = request.POST[key]
+				print(key,value)
 				try:
 					variation = Variation.objects.get(product = product,variation_category__iexact=key, variation_value__iexact = value)
 					product_variation.append(variation)
@@ -106,6 +109,7 @@ def add_cart(request,product_id):
 		try:
 			# get the cart_id present in the session
 			cart = Cart.objects.get(cart_id = _cart_id(request))
+		# create a new cart when there is no cart present
 		except Cart.DoesNotExist:
 			cart = Cart.objects.create(
 				cart_id = _cart_id(request)

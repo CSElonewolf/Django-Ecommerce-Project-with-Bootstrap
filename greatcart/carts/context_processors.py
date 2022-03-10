@@ -12,6 +12,8 @@ def counter(request):
 				cart_items  = CartItem.objects.all().filter(user =request.user)
 			else:
 				cart_items  = CartItem.objects.all().filter(cart = cart[:1])
+				
+			# A product may have different variations so, we need to count the quntity of each item
 			for cart_item in cart_items:
 				cart_count += cart_item.quantity
 		except Cart.DoesNotExist:

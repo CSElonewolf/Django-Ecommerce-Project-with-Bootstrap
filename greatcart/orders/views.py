@@ -116,7 +116,7 @@ def place_order(request,total=0,quantity = 0,):
 			data.phone = form.cleaned_data['phone']
 			data.email = form.cleaned_data['email']
 
-			# if we wish to get the data directly from the Account table 
+			# if we wish to get the data directly from the Account table
 			# data.first_name = current_user.first_name
 			# data.last_name = current_user.last_name
 			# data.phone = current_user.phone_number
@@ -154,7 +154,7 @@ def place_order(request,total=0,quantity = 0,):
 				'cart_items':cart_items,
 				'total':total,
 				'tax':tax,
-				'grand_total':grand_total
+				'grand_total':round(grand_total)
 
 			}
 

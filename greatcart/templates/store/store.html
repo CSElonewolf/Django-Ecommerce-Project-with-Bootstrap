@@ -180,6 +180,8 @@
 								<figure class="card card-product-grid">
 									<div class="img-wrap">
 										<a href="{{product.get_url}}">
+                                        {% comment %} other way of doing it  {% endcomment %}
+										{% comment %} <a href="{% url 'product_detail' product.category.slug product.slug %}"> {% endcomment %}
 											<img src="{{product.images.url}}" />
 										</a>
 									</div>

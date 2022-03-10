@@ -3,7 +3,7 @@ from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 from django.db.models import Q
 from django.contrib import messages
 
-# import for the app itself
+# import from the app itself
 from .models import Product, ProductGallery
 from category.models import Category
 from .models import ReviewRating
@@ -20,15 +20,17 @@ def store(request,category_slug=None):
 
 	categories = None
 	products = None
+	# display products for specific category
 	if category_slug != None:
 		categories = get_object_or_404(Category,slug = category_slug)
-		products = Product.objects.filter(category = categories).order_by('id')
+		products = Product.objects.filter(category = categories,is_available = True).order_by('id')
 		# pagination
 		paginator = Paginator(products,3)
 		page = request.GET.get('page')
 		paged_products = paginator.get_page(page)
 
 		product_count = products.count()
+	# display all the products inside the Products table
 	else:
 		products = Product.objects.all().filter(is_available = True).order_by('id')
 		# pagination
@@ -49,10 +51,14 @@ def search(request):
 	if 'keyword' in request.GET:
 		keyword = request.GET['keyword']
 		if keyword:
-			products = Product.objects.order_by('created_date').filter(Q(description__icontains=keyword) | Q(product_name__icontains = keyword))
+			products = Product.objects.order_by('-created_date').filter(Q(description__icontains=keyword) | Q(product_name__icontains = keyword))
+			# pagination
+			paginator = Paginator(products,3)
+			page = request.GET.get('page')
+			paged_products = paginator.get_page(page)
 			product_count = products.count()
 	context = {
-		'products':products,
+		'products':paged_products,
 		'product_count':product_count,
 	}
 	return render(request,'store/store.html',context)
@@ -62,7 +68,8 @@ def search(request):
 def product_detail(request,category_slug,product_slug):
 	try:
 		single_product = Product.objects.get(category__slug = category_slug,slug = product_slug)
-
+		
+		# check if the product is already added to cart or not
 		in_cart = CartItem.objects.filter(cart__cart_id = _cart_id(request),product = single_product)
 	except Exception as e:
 		raise e

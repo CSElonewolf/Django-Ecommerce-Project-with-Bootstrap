@@ -56,6 +56,7 @@
 			<h6>Choose Color</h6>
 			<select class="form-control" name="color" required>
 				<option value="" disabled selected >Choose Color</option>
+				
 				{% for i in single_product.variation_set.colors %}
 					<option value="{{i.variation_value}}">{{i.variation_value | capfirst}}</option>
 				{% endfor %}

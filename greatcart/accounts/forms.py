@@ -40,7 +40,7 @@ class RegistrationForm(forms.ModelForm):
 		if password != confirm_password:
 			raise ValidationError("Passoword doesn't match")
 
-# forms for the Edit Profile section insid dashboard
+# forms for the Edit Profile section inside dashboard
 class UserForm(forms.ModelForm):
 	class Meta:
 		model = Account
