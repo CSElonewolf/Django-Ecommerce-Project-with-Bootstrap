@@ -7,7 +7,7 @@
 
 {% if request.GET.command == 'verification' %}
 	<div class="card mx-auto alert alert-info text-center" style="max-width: 800px; margin-top:100px;">
-		Thank you for registrating with us. We have sent you a verification email to your email address {{request.GET.email}}
+		Thank you for registrating with us. We have sent you a verification email to your email address {{request.GET.email}}.If have already verified please head over to <a href="{% url 'login' %}">Login Page</a>
 	</div>
 
 {% else %}

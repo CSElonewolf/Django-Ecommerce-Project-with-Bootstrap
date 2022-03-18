@@ -38,7 +38,7 @@ class RegistrationForm(forms.ModelForm):
 		confirm_password = cleaned_data.get('confirm_password')
 
 		if password != confirm_password:
-			raise ValidationError("Passoword doesn't match")
+			raise ValidationError("Password doesn't match")
 
 # forms for the Edit Profile section inside dashboard
 class UserForm(forms.ModelForm):
